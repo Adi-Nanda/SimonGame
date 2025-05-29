@@ -1,3 +1,11 @@
+var sounds = {
+   blue: new Audio("./sounds/blue.mp3"),
+   green: new Audio("./sounds/green.mp3"),
+   red: new Audio("./sounds/red.mp3"),
+   wrong: new Audio("./sounds/wrong.mp3"),
+   yellow: new Audio("./sounds/yellow.mp3"),
+}
+
 $(document).ready(function(){
 
    var lvl = 0;
@@ -5,14 +13,6 @@ $(document).ready(function(){
    var pattern = [];
    var userPattern = [];
    $(".box").click(false);
-
-   var sounds = {
-      blue: new Audio("./sounds/blue.mp3"),
-      green: new Audio("./sounds/green.mp3"),
-      red: new Audio("./sounds/red.mp3"),
-      wrong: new Audio("./sounds/wrong.mp3"),
-      yellow: new Audio("./sounds/yellow.mp3"),
-   }
 
    $(".start").on("click", function(){
       $(".start").hide();
@@ -36,7 +36,7 @@ $(document).ready(function(){
       if( $(".start").is(":visible")){
          return;
       }
-      sounds[$(this).attr("id")].play();
+      playSound( $(this).attr("id") );
       userPattern.push($(this).attr("id"));
       checkAns();
    });
@@ -48,7 +48,7 @@ $(document).ready(function(){
 
       for(let i=0; i<userPattern.length; i++){
          if(userPattern[i] !== pattern[i]){
-            sounds.wrong.play();
+            playSound("wrong");
             $("h1").text("Game over! Please try again");
             $(".start").show();
             $(".start").text("Retry");
@@ -66,11 +66,21 @@ $(document).ready(function(){
    }
 
    function flash(item_id){
-      sounds[item_id].play();
+      playSound(item_id);
       $("#" + item_id).addClass("glow");
       setTimeout(function(){
          $("#" + item_id).removeClass("glow");
       }, 200);
+   }
+
+   function playSound(sound){
+      Object.values(sounds).forEach(item =>{
+         item.pause();
+         item.currentTime = 0;
+      });
+      if (sounds[sound]){
+         sounds[sound].play();
+      }
    }
 
 });
